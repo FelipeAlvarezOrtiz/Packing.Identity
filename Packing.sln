@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packing.Mudblazor.Server", "Packing.Mudblazor\Server\Packing.Mudblazor.Server.csproj", "{4237CA55-47C1-4C73-91D2-21FD3B3BD85F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packing.Mudblazor.Server", "Packing.Mudblazor\Server\Packing.Mudblazor.Server.csproj", "{4237CA55-47C1-4C73-91D2-21FD3B3BD85F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packing.Mudblazor.Client", "Packing.Mudblazor\Client\Packing.Mudblazor.Client.csproj", "{84F5D7C6-DEC4-43EC-90B6-95A31BC5463D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packing.Mudblazor.Client", "Packing.Mudblazor\Client\Packing.Mudblazor.Client.csproj", "{84F5D7C6-DEC4-43EC-90B6-95A31BC5463D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packing.Mudblazor.Shared", "Packing.Mudblazor\Shared\Packing.Mudblazor.Shared.csproj", "{DC4C6B9F-D5AA-49C4-BE0F-771D11D1C49D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packing.Mudblazor.Shared", "Packing.Mudblazor\Shared\Packing.Mudblazor.Shared.csproj", "{DC4C6B9F-D5AA-49C4-BE0F-771D11D1C49D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

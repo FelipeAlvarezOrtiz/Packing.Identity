@@ -1,0 +1,120 @@
+﻿@page "/Empresas"
+@using Packing.Mudblazor.Shared
+@attribute [Authorize]
+@inject NavigationManager navigationManager
+@inject HttpClient client
+@inject IDialogService DialogService
+
+
+<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Indice Empresas</h3>
+<MudDivider />
+<div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col-12">
+            @if (empresasEnSistema is null)
+            {
+                <div class="col">
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <p>Cargando, espere por favor ...</p>
+                        </div>
+                    </div>
+                </div>
+                <MudSkeleton />
+                <MudSkeleton Animation="Animation.False" />
+                <MudSkeleton Animation="Animation.Wave" />
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+            }
+            else if (!empresasEnSistema.Any())
+            {
+                <div class="h4 text-center m-4"> No existen empresas creadas.</div>
+            }
+            else
+            {
+                <MudTable Items="@empresasEnSistema" RowsPerPage="10" Elevation="2" Filter="new Func<Empresa,bool>(FilterFunc)"
+                          @bind-SelectedItem="selectedEmpresa" SortLabel="Ordenar Por"
+                          Breakpoint="Breakpoint.Sm" Dense="false" Hover="true" Striped="true" Bordered="true">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Empresas en el sistema</MudText>
+                        <MudToolBarSpacer />
+                        <MudTextField @bind-Value="searchString" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Razón social</MudTh>
+                        <MudTh>R.U.T.</MudTh>
+                        <MudTh>Contacto</MudTh>
+                        <MudTh>Telefono</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.IdEmpresa</MudTd>
+                        <MudTd DataLabel="RazonSocial">@context.RazonSocial</MudTd>
+                        <MudTd DataLabel="RutEmpresa">@context.RutEmpresa</MudTd>
+                        <MudTd DataLabel="Contacto">@context.PersonaContacto</MudTd>
+                        <MudTd DataLabel="Telefono">@context.TelefonoContacto</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager RowsPerPageString="Empresas por página"/>
+                    </PagerContent>
+                </MudTable>
+            }
+        </div>
+    </div>
+    <MudDivider />
+    <div class="row mb-3">
+        <div class="col-6 d-flex justify-content-end">
+       </div>
+        <div class="col-3 p-2 d-flex justify-content-end">
+            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@((e) => OpenDialog(fullScreen))" />
+        </div>
+        <div class="col-3 p-2 d-flex justify-content-center">
+            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+        </div>
+    </div>
+</div>
+
+@code {
+    protected Empresa selectedEmpresa = null;
+    protected IEnumerable<Empresa> empresasEnSistema = new List<Empresa>(){
+        new Empresa()
+        {
+            RutEmpresa = "11.111.111-3",
+            DireccionEmpresa = "Pasaje 18 de septiembre #70",
+            Giro = "Venta de weas",
+            IdEmpresa = 1,
+            Imagen = string.Empty,
+            PersonaContacto = "Felipe Alvarez",
+            RazonSocial = "Felipe Ltda",
+            TelefonoContacto = "+56944194670",
+            Vigente = true
+        },
+        new Empresa()
+        {
+            RutEmpresa = "18.823.970-3",
+            DireccionEmpresa = "Pasaje 18 de septiembre #70",
+            Giro = "Venta de estupideces",
+            IdEmpresa = 2,
+            Imagen = string.Empty,
+            PersonaContacto = "Jorge Ortiz",
+            RazonSocial = "Banco Ltda",
+            TelefonoContacto = "+56944194670",
+            Vigente = true
+        }
+    };
+    DialogOptions fullScreen = new DialogOptions() { FullScreen = true, CloseButton = true };
+    private string searchString = "";
+
+    private bool FilterFunc(Empresa empresa)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (empresa.RazonSocial.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return empresa.RutEmpresa.Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{empresa.PersonaContacto} {empresa.TelefonoContacto} {empresa.Giro}".Contains(searchString);
+    }
+
+    private void OpenDialog(DialogOptions options)
+    {
+        DialogService.Show<Packing.Mudblazor.Client.Pages.Empresas.EmpresaComponent>("Ingresar nueva Empresa", options);
+    }
+}

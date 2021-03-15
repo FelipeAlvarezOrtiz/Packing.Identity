@@ -1,10 +1,28 @@
 <MudThemeProvider />
-<MudDialogProvider />
+<MudDialogProvider FullWidth="true" 
+                   CloseButton="true" 
+                   DisableBackdropClick="true"
+                   Position="DialogPosition.Center"/>
 <MudSnackbarProvider />
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <div class="container-fluid">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col d-flex justify-content-center">
+                                    <p>Validando sus credenciales, espere por favor ...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <MudSkeleton/>
+                    <MudSkeleton Animation="Animation.False"/>
+                    <MudSkeleton Animation="Animation.Wave"/>
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+                </Authorizing>
                 <NotAuthorized>
                     <RedirectToLogin></RedirectToLogin>
                 </NotAuthorized>

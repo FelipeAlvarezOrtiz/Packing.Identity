@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Packing.Mudblazor.Server.Models;
+using Packing.Mudblazor.Shared;
 
 namespace Packing.Mudblazor.Server.Data
 {
@@ -13,5 +14,7 @@ namespace Packing.Mudblazor.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<Empresa> Empresas { get; set; }
     }
 }

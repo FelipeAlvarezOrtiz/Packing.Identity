@@ -35,7 +35,7 @@ namespace Packing.Mudblazor.Server.Helpers
             {
                 if (claim.Type == JwtClaimTypes.Role)
                 {
-                    claimsMapped.Add(new Claim(ClaimTypes.Role,claim.Value));
+                    claimsMapped.Add(new Claim("Role",claim.Value));
                 }
             }
             claims.AddRange(claimsMapped);

@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -47,10 +48,14 @@ namespace Packing.Mudblazor.Server
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
                 .AddProfileService<IdentityProfileService>();
+            
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-
+            services.AddHttpClient();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

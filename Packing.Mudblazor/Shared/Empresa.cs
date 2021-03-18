@@ -18,9 +18,9 @@ namespace Packing.Mudblazor.Shared
         public string DireccionEmpresa { get; set; }
         [MaxLength(50, ErrorMessage = "Límite de carácteres excedido.")]
         public string TelefonoContacto { get; set; }
-        [Required, MinLength(20), MaxLength(150)]
+        [Required, MinLength(10), MaxLength(150)]
         public string Giro { get; set; }
-        [Required, MinLength(20), MaxLength(150)]
+        [Required, MinLength(10), MaxLength(150)]
         public string PersonaContacto { get; set; }
     }
 }

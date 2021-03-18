@@ -1,4 +1,4 @@
-﻿@page "/Empresas"
+﻿@page "/empresas"
 @using Packing.Mudblazor.Shared
 @attribute [Authorize]
 @inject NavigationManager navigationManager
@@ -68,39 +68,14 @@
             <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@((e) => OpenDialog(fullScreen))" />
         </div>
         <div class="col-3 p-2 d-flex justify-content-center">
-            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@InsertarValorPrueba" />
         </div>
     </div>
 </div>
 
 @code {
     protected Empresa selectedEmpresa = null;
-    protected IEnumerable<Empresa> empresasEnSistema = new List<Empresa>(){
-        new Empresa()
-        {
-            RutEmpresa = "11.111.111-3",
-            DireccionEmpresa = "Pasaje 18 de septiembre #70",
-            Giro = "Venta de weas",
-            IdEmpresa = 1,
-            Imagen = string.Empty,
-            PersonaContacto = "Felipe Alvarez",
-            RazonSocial = "Felipe Ltda",
-            TelefonoContacto = "+56944194670",
-            Vigente = true
-        },
-        new Empresa()
-        {
-            RutEmpresa = "18.823.970-3",
-            DireccionEmpresa = "Pasaje 18 de septiembre #70",
-            Giro = "Venta de estupideces",
-            IdEmpresa = 2,
-            Imagen = string.Empty,
-            PersonaContacto = "Jorge Ortiz",
-            RazonSocial = "Banco Ltda",
-            TelefonoContacto = "+56944194670",
-            Vigente = true
-        }
-    };
+    private List<Empresa> empresasEnSistema;
     DialogOptions fullScreen = new DialogOptions() { FullScreen = true, CloseButton = true };
     private string searchString = "";
 
@@ -117,4 +92,49 @@
     {
         DialogService.Show<Packing.Mudblazor.Client.Pages.Empresas.EmpresaComponent>("Ingresar nueva Empresa", options);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            empresasEnSistema = await client.GetFromJsonAsync<List<Empresa>>("https://localhost:5005/api/empresas");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+
+    protected async void InsertarValorPrueba()
+    {
+        try
+        {
+            var nuevaEmpresa = new Empresa()
+            {
+                RutEmpresa = "10.688.009-3",
+                RazonSocial = "Razon desde POST",
+                TelefonoContacto = "+56911111",
+                PersonaContacto = "Persona de prueba para probar",
+                DireccionEmpresa = "Direccion de POST",
+                Giro = "Giro de Post prueba para probar de prueba",
+                Imagen = "null",
+                Vigente = true
+            };
+
+            var result = await client.PostAsJsonAsync("api/empresas", nuevaEmpresa);
+            if (result.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Todo exitoso");
+            }
+            else
+            {
+                Console.WriteLine(await result.Content.ReadAsStringAsync());
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+
 }

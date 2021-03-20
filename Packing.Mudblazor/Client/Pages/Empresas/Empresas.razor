@@ -1,6 +1,6 @@
 ﻿@page "/empresas"
 @using Packing.Mudblazor.Shared
-@attribute [Authorize]
+@attribute [Authorize(Roles="Admin,Developer")]
 @inject NavigationManager navigationManager
 @inject HttpClient client
 @inject IDialogService DialogService

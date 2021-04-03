@@ -5,6 +5,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MudBlazor.Services;
+using Packing.Mudblazor.Client.Helpers;
 
 namespace Packing.Mudblazor.Client
 {
@@ -27,7 +28,7 @@ namespace Packing.Mudblazor.Client
             builder.Services.AddApiAuthorization(options =>
             {
                 options.UserOptions.RoleClaim = "role";
-            });
+            }).AddAccountClaimsPrincipalFactory<CustomUserFactory>();
             ConfigureServices(builder.Services);
             await builder.Build().RunAsync();
         }

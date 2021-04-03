@@ -46,7 +46,11 @@ namespace Packing.Mudblazor.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(opt =>
+                {
+                    opt.IdentityResources["openid"].UserClaims.Add("role");
+                    opt.ApiResources.Single().UserClaims.Add("role");
+                })
                 .AddProfileService<IdentityProfileService>();
             
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");

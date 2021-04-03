@@ -5,7 +5,7 @@
 @inject NavigationManager navigationManager
 @inject HttpClient client
 
-<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Indice Empresas</h3>
+<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Indice Productos</h3>
 <MudDivider />
 <div class="container-fluid">
     <div class="row mt-2">
@@ -26,7 +26,7 @@
             }
             else if (!ProductosEnSistema.Any())
             {
-                <div class="h4 text-center m-4"> No existen empresas creadas.</div>
+                <div class="h4 text-center m-4"> No existen productos creados.</div>
             }
             else
             {
@@ -34,23 +34,23 @@
                           @bind-SelectedItem="SelectedProducto" SortLabel="Ordenar Por"
                           Breakpoint="Breakpoint.Sm" Dense="false" Hover="true" Striped="true" Bordered="true">
                     <ToolBarContent>
-                        <MudText Typo="Typo.h6">Empresas en el sistema</MudText>
+                        <MudText Typo="Typo.h6">Productos en el sistema</MudText>
                         <MudToolBarSpacer />
                         <MudTextField @bind-Value="SearchString" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
                     <HeaderContent>
                         <MudTh>Id</MudTh>
-                        <MudTh>Razón social</MudTh>
-                        <MudTh>R.U.T.</MudTh>
-                        <MudTh>Contacto</MudTh>
-                        <MudTh>Telefono</MudTh>
+                        <MudTh>Nombre</MudTh>
+                        <MudTh>Formato</MudTh>
+                        <MudTh>Presentacion</MudTh>
+                        <MudTh>Grupo</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Id">@context.IdProducto</MudTd>
                         <MudTd DataLabel="RazonSocial">@context.NombreProducto</MudTd>
-                        <MudTd DataLabel="RutEmpresa">@context.</MudTd>
-                        <MudTd DataLabel="Contacto">@context.PersonaContacto</MudTd>
-                        <MudTd DataLabel="Telefono">@context.TelefonoContacto</MudTd>
+                        <MudTd DataLabel="RutEmpresa">@context.NombreFormato</MudTd>
+                        <MudTd DataLabel="Contacto">@context.NombrePresentacion</MudTd>
+                        <MudTd DataLabel="Telefono">@context.NombreGrupo</MudTd>
                     </RowTemplate>
                     <PagerContent>
                         <MudTablePager RowsPerPageString="Empresas por página" />
@@ -74,13 +74,13 @@
 </div>
 <MudDivider />
 @code {
-    protected List<Producto> ProductosEnSistema;
-    protected Producto SelectedProducto;
+    protected List<ProductoDdo> ProductosEnSistema;
+    protected ProductoDdo SelectedProducto;
     protected string SearchString = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ProductosEnSistema = await client.GetFromJsonAsync<List<Producto>>("");
+        ProductosEnSistema = await client.GetFromJsonAsync<List<ProductoDdo>>("/api/productos/obtenerListaProductos");
     }
 
     protected void CrearNuevoProducto()

@@ -16,5 +16,10 @@ namespace Packing.Mudblazor.Server.Data
         }
 
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<Producto> Productos { get; set; }
+        public DbSet<Formato> Formatos { get; set; }
+        public DbSet<Presentacion> Presentaciones { get; set; }
+        public DbSet<GrupoProducto> Grupos { get; set; }
     }
+
 }

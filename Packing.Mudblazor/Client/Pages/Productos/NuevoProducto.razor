@@ -1,0 +1,135 @@
+﻿@page "/productos/nuevo"
+@using Packing.Mudblazor.Shared
+@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Developer")]
+@inject NavigationManager NavigationManager
+@inject HttpClient Client
+
+<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Nueva Empresa</h3>
+<MudDivider />
+<div class="container-fluid">
+    @if (Formatos is null || Presentaciones is null || Grupos is null)
+    {
+        <div class="col">
+            <div class="row">
+                <div class="col d-flex justify-content-center">
+                    <p>Cargando, espere por favor ...</p>
+                </div>
+            </div>
+        </div>
+        <MudSkeleton />
+        <MudSkeleton Animation="Animation.False" />
+        <MudSkeleton Animation="Animation.Wave" />
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="m-7" />
+    }
+    else
+    {
+        <EditForm Model="ProductoNuevo" OnValidSubmit="InsertarProducto">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">Nombre</label>
+                        <InputText class="form-control" @bind-Value="@ProductoNuevo.NombreProducto"></InputText>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <MudCheckBox @bind-Checked="@ProductoNuevo.Vigente" Label="Vigente" Color="Color.Primary"></MudCheckBox>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-form-label">Formato</label>
+                        <select class="form-control" @bind="@ProductoNuevo.IdFormato">
+                            @foreach (var formato in Formatos)
+                            {
+                                <option value="@formato.IdFormato">@formato.NombreFormato</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-form-label">Presentación</label>
+                        <select class="form-control" @bind="@ProductoNuevo.IdPresentacin">
+                            @foreach (var presentacion in Presentaciones)
+                            {
+                                <option value="@presentacion.IdPresentacion">@presentacion.NombrePresentacion</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-form-label">Grupo</label>
+                        <select class="form-control" @bind="@ProductoNuevo.IdGrupo">
+                            @foreach (var grupo in Grupos)
+                            {
+                                <option value="@grupo.IdGrupo">@grupo.NombreGrupo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <MudDivider></MudDivider>
+            <div class="row mt-2 mb-2">
+                <div class="col-md-6 d-flex justify-content-center">
+                    <MudFab Icon="@Icons.Material.Filled.Navigation" Label="Volver atrás" Size="Size.Small" OnClick="@VolverAtras" />
+                </div>
+                <div class="col-md-6 d-flex justify-content-center">
+                <button class="btn btn-outline-success" type="submit">Guardar</Button>
+                </div>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    protected ProductoDto ProductoNuevo = new();
+    protected List<Formato> Formatos;
+    protected List<Presentacion> Presentaciones;
+    protected List<GrupoProducto> Grupos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Formatos = await Client.GetFromJsonAsync<List<Formato>>("/api/productos/obtenerFormatos");
+        Presentaciones = await Client.GetFromJsonAsync<List<Presentacion>>("/api/productos/obtenerPresentacion");
+        Grupos = await Client.GetFromJsonAsync<List<GrupoProducto>>("/api/productos/obtenerGrupos");
+    }
+
+    protected async Task InsertarProducto()
+    {
+        try
+        {
+            var result = await Client.PostAsJsonAsync("api/productos/insertarProducto", ProductoNuevo);
+            if (result.IsSuccessStatusCode)
+            {
+                LimpiarProducto();
+            }
+            Console.WriteLine(result.IsSuccessStatusCode ? "Completado con exito" : "Error al enviar la petición");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+
+    protected void LimpiarProducto()
+    {
+        ProductoNuevo.IdFormato = 0;
+        ProductoNuevo.NombreProducto = string.Empty;
+        ProductoNuevo.IdGrupo = 0;
+        ProductoNuevo.IdPresentacin = 0;
+        ProductoNuevo.Vigente = false;
+    }
+
+    protected void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/productos/indice");
+    }
+
+}

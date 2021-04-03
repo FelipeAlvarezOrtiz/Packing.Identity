@@ -55,6 +55,8 @@ namespace Packing.Mudblazor.Shared
         public int IdFormato { get; set; }
         [Required,MinLength(10),MaxLength(100)]
         public string NombreFormato { get; set; }
+        [Required]
+        public int UnidadesPorFormato { get; set; }
     }
 
     public class Presentacion

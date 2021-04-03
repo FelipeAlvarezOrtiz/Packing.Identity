@@ -1,0 +1,95 @@
+@page "/productos/indice"
+@using Packing.Mudblazor.Shared
+@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Developer")]
+@inject NavigationManager navigationManager
+@inject HttpClient client
+
+<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Indice Empresas</h3>
+<MudDivider />
+<div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col">
+            @if (ProductosEnSistema is null)
+            {
+                <div class="col">
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <p>Cargando, espere por favor ...</p>
+                        </div>
+                    </div>
+                </div>
+                <MudSkeleton />
+                <MudSkeleton Animation="Animation.False" />
+                <MudSkeleton Animation="Animation.Wave" />
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="m-7" />
+            }
+            else if (!ProductosEnSistema.Any())
+            {
+                <div class="h4 text-center m-4"> No existen empresas creadas.</div>
+            }
+            else
+            {
+                <MudTable Items="@ProductosEnSistema" RowsPerPage="10" Elevation="2"
+                          @bind-SelectedItem="SelectedProducto" SortLabel="Ordenar Por"
+                          Breakpoint="Breakpoint.Sm" Dense="false" Hover="true" Striped="true" Bordered="true">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Empresas en el sistema</MudText>
+                        <MudToolBarSpacer />
+                        <MudTextField @bind-Value="SearchString" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>Id</MudTh>
+                        <MudTh>Razón social</MudTh>
+                        <MudTh>R.U.T.</MudTh>
+                        <MudTh>Contacto</MudTh>
+                        <MudTh>Telefono</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.IdProducto</MudTd>
+                        <MudTd DataLabel="RazonSocial">@context.NombreProducto</MudTd>
+                        <MudTd DataLabel="RutEmpresa">@context.</MudTd>
+                        <MudTd DataLabel="Contacto">@context.PersonaContacto</MudTd>
+                        <MudTd DataLabel="Telefono">@context.TelefonoContacto</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager RowsPerPageString="Empresas por página" />
+                    </PagerContent>
+                </MudTable>
+            }
+        </div>
+    </div>
+    <MudDivider />
+    <div class="row mb-3">
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Color="Color.Success" Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@CrearNuevoProducto" Label="Agregar" />
+        </div>
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Label="Editar"/>
+        </div>
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Icon="@Icons.Material.Filled.Navigation" Label="Volver atrás" Size="Size.Small" OnClick="@VolverAtras" />
+        </div>
+    </div>
+</div>
+<MudDivider />
+@code {
+    protected List<Producto> ProductosEnSistema;
+    protected Producto SelectedProducto;
+    protected string SearchString = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductosEnSistema = await client.GetFromJsonAsync<List<Producto>>("");
+    }
+
+    protected void CrearNuevoProducto()
+    {
+        navigationManager.NavigateTo("/productos/nuevo");
+    }
+
+    protected void VolverAtras()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}

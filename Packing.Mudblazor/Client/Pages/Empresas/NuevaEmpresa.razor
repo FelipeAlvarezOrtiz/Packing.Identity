@@ -1,0 +1,105 @@
+﻿@page "/empresas/nuevo"
+@using Packing.Mudblazor.Shared
+@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Developer")]
+@inject NavigationManager navigationManager
+@inject HttpClient client
+
+<h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Nueva Empresa</h3>
+<MudDivider />
+<div class="container-fluid">
+    <EditForm Model="nuevaEmpresa" OnValidSubmit="InsertarEmpresa">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row form-group">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Razon social</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.RazonSocial"></InputText>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">R.U.T</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.RutEmpresa"></InputText>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md">
+                <div class="form-group">
+                    <label class="col-form-label">Dirección</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.DireccionEmpresa"></InputText>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md">
+                <div class="form-group">
+                    <label class="col-form-label">Giro</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.Giro"></InputText>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Persona de contacto</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.PersonaContacto"></InputText>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Telefono de contacto</label>
+                    <InputText class="form-control" @bind-Value="@nuevaEmpresa.TelefonoContacto"></InputText>
+                </div>
+            </div>
+        </div>
+        <MudDivider></MudDivider>
+        <div class="row mt-2 mb-2">
+            <div class="col-md-6 d-flex justify-content-center">
+                <MudButton Class="btn form-group" OnClick="VolverAtras">Volver atrás</MudButton>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center">
+                <input class="form-group btn btn-outline-success" type="submit" value="Guardar"/>
+            </div>
+        </div>
+        <MudDivider></MudDivider>
+    </EditForm>
+</div>
+
+@code {
+    private EmpresaDto nuevaEmpresa = new();
+
+    protected async Task InsertarEmpresa()
+    {
+        try
+        {
+            var result = await client.PostAsJsonAsync("api/empresas", nuevaEmpresa);
+            if (result.IsSuccessStatusCode)
+            {
+                LimpiarEmpresa();
+            }
+            Console.WriteLine(result.IsSuccessStatusCode ? "Completado con exito" : "Error al enviar la petición");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+
+    protected void VolverAtras()
+    {
+        navigationManager.NavigateTo("/empresas/indice");
+    }
+
+    protected void LimpiarEmpresa()
+    {
+        nuevaEmpresa.DireccionEmpresa = string.Empty;
+        nuevaEmpresa.Giro = string.Empty;
+        nuevaEmpresa.Imagen = string.Empty;
+        nuevaEmpresa.PersonaContacto = string.Empty;
+        nuevaEmpresa.TelefonoContacto = string.Empty;
+        nuevaEmpresa.RazonSocial = string.Empty;
+    }
+}

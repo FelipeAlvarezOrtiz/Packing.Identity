@@ -1,10 +1,9 @@
-﻿@page "/empresas"
+﻿@page "/empresas/indice"
 @using Packing.Mudblazor.Shared
 @attribute [Authorize(Roles = "Admin")]
-@attribute [Authorize(Roles = "Cliente")]
+@attribute [Authorize(Roles = "Developer")]
 @inject NavigationManager navigationManager
 @inject HttpClient client
-@inject IDialogService DialogService
 
 
 <h3 class="m-3"><i class="fas fa-list-ol"></i>&nbsp; Indice Empresas</h3>
@@ -24,7 +23,7 @@
                 <MudSkeleton />
                 <MudSkeleton Animation="Animation.False" />
                 <MudSkeleton Animation="Animation.Wave" />
-                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="m-7" />
             }
             else if (!empresasEnSistema.Any())
             {
@@ -63,13 +62,14 @@
     </div>
     <MudDivider />
     <div class="row mb-3">
-        <div class="col-6 d-flex justify-content-end">
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Color="Color.Success" Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@CrearNuevaEmpresa" Label="Agregar" />
         </div>
-        <div class="col-3 p-2 d-flex justify-content-end">
-            <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@((e) => OpenDialog(fullScreen))" />
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@InsertarValorPrueba" Label="Editar"/>
         </div>
-        <div class="col-3 p-2 d-flex justify-content-center">
-            <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@InsertarValorPrueba" />
+        <div class="col-md-4 mt-2 d-flex justify-content-center">
+            <MudFab Icon="@Icons.Material.Filled.Navigation" Label="Volver atrás" Size="Size.Small" OnClick="@VolverAtras" />
         </div>
     </div>
 </div>
@@ -77,7 +77,6 @@
 @code {
     protected Empresa selectedEmpresa = null;
     private List<Empresa> empresasEnSistema;
-    DialogOptions fullScreen = new DialogOptions() { FullScreen = true, CloseButton = true };
     private string searchString = "";
 
     private bool FilterFunc(Empresa empresa)
@@ -89,16 +88,12 @@
         return empresa.RutEmpresa.Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{empresa.PersonaContacto} {empresa.TelefonoContacto} {empresa.Giro}".Contains(searchString);
     }
 
-    private void OpenDialog(DialogOptions options)
-    {
-        DialogService.Show<Packing.Mudblazor.Client.Pages.Empresas.EmpresaComponent>("Ingresar nueva Empresa", options);
-    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            empresasEnSistema = await client.GetFromJsonAsync<List<Empresa>>("https://localhost:5005/api/empresas");
+            empresasEnSistema = await client.GetFromJsonAsync<List<Empresa>>("/api/empresas");
         }
         catch (Exception exception)
         {
@@ -136,6 +131,16 @@
         {
             Console.WriteLine(exception.Message);
         }
+    }
+
+    protected void CrearNuevaEmpresa()
+    {
+        navigationManager.NavigateTo("/empresas/nuevo");
+    }
+
+    protected void VolverAtras()
+    {
+        navigationManager.NavigateTo("/");
     }
 
 }

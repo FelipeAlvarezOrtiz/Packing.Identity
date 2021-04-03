@@ -23,4 +23,23 @@ namespace Packing.Mudblazor.Shared
         [Required, MinLength(10), MaxLength(150)]
         public string PersonaContacto { get; set; }
     }
+
+    public class EmpresaDto
+    {
+        [Required(ErrorMessage = "Este dato es requerido."), MaxLength(200, ErrorMessage = "Límite de carácteres excedido.")]
+        public string RazonSocial { get; set; }
+        [Required(ErrorMessage = "Este dato es requerido.")]
+        public bool Vigente { get; set; }
+        public string Imagen { get; set; }
+        [Required(ErrorMessage = "Este dato es requerido."),MinLength(9),MaxLength(13,ErrorMessage = "Limite de carácteres excedido.")]
+        public string RutEmpresa { get; set; }
+        [Required]
+        public string DireccionEmpresa { get; set; }
+        [MaxLength(15,ErrorMessage = "Maximo de caracteres excedido.")]
+        public string TelefonoContacto { get; set; }
+        [Required, MinLength(10), MaxLength(150)]
+        public string Giro { get; set; }
+        [Required, MinLength(10), MaxLength(150)]
+        public string PersonaContacto { get; set; }
+    }
 }

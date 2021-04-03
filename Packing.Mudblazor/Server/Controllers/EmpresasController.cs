@@ -29,9 +29,19 @@ namespace Packing.Mudblazor.Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> InsertarEmpresa(Empresa empresaEntrante)
+        public async Task<ActionResult<int>> InsertarEmpresa(EmpresaDto request)
         {
-           await context.Empresas.AddAsync(empresaEntrante);
+           await context.Empresas.AddAsync(new Empresa()
+           {
+               DireccionEmpresa = request.DireccionEmpresa,
+               Giro = request.Giro,
+               Imagen = request.Imagen,
+               PersonaContacto = request.PersonaContacto,
+               RazonSocial = request.RazonSocial,
+               RutEmpresa = request.RutEmpresa,
+               TelefonoContacto = request.TelefonoContacto,
+               Vigente = request.Vigente
+           });
            return await context.SaveChangesAsync() > 0
                ? 1
                : throw new Exception("Problema al guardar el producto");

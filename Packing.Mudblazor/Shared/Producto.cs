@@ -15,10 +15,38 @@ namespace Packing.Mudblazor.Shared
         public Presentacion Presentacion { get; set; }
         [Required]
         public bool Vigente { get; set; }
-        [Required]
         public string Imagen { get; set; }
         [Required]
         public GrupoProducto GrupoProducto { get; set; }
+    }
+
+    public class ProductoDdo
+    {
+        public int IdProducto { get; set; }
+        public string NombreProducto { get; set; }
+        public int IdFormato { get; set; }
+        public string NombreFormato { get; set; }
+        public int IdPresentacion { get; set; }
+        public string NombrePresentacion { get; set; }
+        public bool Vigente { get; set; }
+        public string Imagen { get; set; }
+        public int IdGrupo { get; set; }
+        public string NombreGrupo { get; set; }
+    }
+
+    public class ProductoDto
+    {
+        [Required, MaxLength(150), MinLength(20)]
+        public string NombreProducto { get; set; }
+        [Required]
+        public int IdFormato { get; set; }
+        [Required]
+        public int IdPresentacin { get; set; }
+        [Required]
+        public bool Vigente { get; set; }
+        public string Imagen { get; set; }
+        [Required]
+        public int IdGrupo { get; set; }
     }
 
     public class Formato

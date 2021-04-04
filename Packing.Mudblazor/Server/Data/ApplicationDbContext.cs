@@ -20,6 +20,8 @@ namespace Packing.Mudblazor.Server.Data
         public DbSet<Formato> Formatos { get; set; }
         public DbSet<Presentacion> Presentaciones { get; set; }
         public DbSet<GrupoProducto> Grupos { get; set; }
+
+        public DbSet<Notificacion> Notificaciones { get; set; }
     }
 
 }

@@ -1,15 +1,16 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using Mailjet.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Packing.Mudblazor.Client;
 using Packing.Mudblazor.Server.Data;
 using Packing.Mudblazor.Server.Helpers;
 using Packing.Mudblazor.Server.Models;
@@ -56,7 +57,8 @@ namespace Packing.Mudblazor.Server
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-
+            services.AddScoped<NotificacionesService>();
+            services.AddSingleton<MailjetClient>();
             services.AddAuthentication()
                 .AddIdentityServerJwt();
             services.AddHttpClient();
@@ -92,6 +94,12 @@ namespace Packing.Mudblazor.Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/api/config/notificacionesllavepublica", async context =>
+                {
+                    var configuration = context.RequestServices.GetRequiredService<IConfiguration>();
+                    await context.Response.WriteAsync(configuration.GetValue<string>("Notificaciones:publicKey"));
+                });
+
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");

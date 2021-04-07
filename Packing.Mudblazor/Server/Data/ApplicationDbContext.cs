@@ -22,6 +22,10 @@ namespace Packing.Mudblazor.Server.Data
         public DbSet<GrupoProducto> Grupos { get; set; }
 
         public DbSet<Notificacion> Notificaciones { get; set; }
+
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<EstadoPedido> EstadosPedidos { get; set; }
+        public DbSet<DetallePedido> DetallesPedidos { get; set; }
     }
 
 }
